@@ -1,21 +1,25 @@
 include("jTeachOPTmain.jl");
 include("branchandbound.jl");
 
-ukp = instance(5, zeros(5), zeros(5), 0)
+ukp = instance(7, zeros(7), zeros(7), 0)
 
-ukp.c[1] = 15;
-ukp.c[2] = 7;
-ukp.c[3] = 14;
-ukp.c[4] = 18;
-ukp.c[5] = 17;
+ukp.c[1] = 70;
+ukp.c[2] = 20;
+ukp.c[3] = 39;
+ukp.c[4] = 37;
+ukp.c[5] = 7;
+ukp.c[6] = 5;
+ukp.c[7] = 10;
 
-ukp.w[1] = 12;
-ukp.w[2] = 7;
-ukp.w[3] = 15;
-ukp.w[4] = 24;
-ukp.w[5] = 23;
+ukp.w[1] = 31;
+ukp.w[2] = 10;
+ukp.w[3] = 20;
+ukp.w[4] = 19;
+ukp.w[5] = 4;
+ukp.w[6] = 3;
+ukp.w[7] = 6;
 
-ukp.W = 53;
+ukp.W = 50;
 
 #solution gloutone
 sol = computeGreedySolutionUKP(ukp);

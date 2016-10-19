@@ -40,10 +40,39 @@ end
 
 # instance , solution en cour , indice de la variable considere , meilleur solution actuele
 function branchandbound(ukp, sol, k, best)
-	if(completeLinear(ukp, sol, k) > best.z)
-		compGreed = completeGreedy(ukp, sol, k);
-		#a finir
-	else
-		return best;
-	end
+	print("\nsolution : valeur :");
+  print(sol.z);
+  for i=1:ukp.n
+    print(sol.x[i]);
+    print(" - ");
+  end
+  print("\n");
+
+  if(k == ukp.n)
+    if (sol.z > ukp.z)
+      best = sol;
+    end 
+    #backtrack
+    while (k>0) && (sol[k] == 0)
+      k = k-1;
+    end
+    if (0 == k)
+      #plus de backtrack possible
+      return best;
+    else
+      sol[k] = 0;
+      return branchandbound(ukp, sol, k, best);
+    end
+  else 
+    if(completeLinear(ukp, sol, k) > best.z)
+      return branchandbound(ukp, completeGreedy(ukp, sol, k) , k, best);
+    else
+      #backtrack
+      while (k>0) && (sol[k] == 0)
+        k = k-1;
+      end
+      sol[k] = 0;
+      return branchandbound(ukp, sol, k, best);
+    end
+  end
 end
