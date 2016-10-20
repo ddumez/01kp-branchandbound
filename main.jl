@@ -1,7 +1,7 @@
 include("jTeachOPTmain.jl");
 include("branchandbound.jl");
 
-ukp = instance(7, zeros(7), zeros(7), 0)
+ukp = instance(7, zeros(7), zeros(7), 7)
 
 ukp.c[1] = 70;
 ukp.c[2] = 20;
@@ -68,3 +68,35 @@ for i=1:ukp.n-1
 	print(" - ");
 end
 print(sol.x[ukp.n],"\n \n");
+
+
+#experimentations numeriques
+for i=1:6
+	f = open("./instances/$i/p0$(i)_c.txt");
+	ukp.W = parse(Int, readline(f));
+	ukp.n = parse(Int, readline(f));
+	close(f)
+	ukp = instance(ukp.n, zeros(ukp.n), zeros(ukp.n), ukp.W)
+	f = open("./instances/$i/p0$(i)_w.txt");
+	f2 = open("./instances/$i/p0$(i)_p.txt");
+	f3 = open("./instances/$i/p0$(i)_s.txt");
+	opt = []
+	for k=1:ukp.n
+		ukp.w[k] = parse(Int64, readline(f));
+		ukp.c[k] = parse(Int64, readline(f2));
+		opt = push!(opt,parse(Int64, readline(f3)));
+	end
+	close(f);
+	close(f2);
+	close(f3);
+	valopt = 0;
+	for k = 1:ukp.n
+		valopt = valopt + ukp.c[k] * opt[k];
+	end
+	sol = solution(zeros(Int64, ukp.n), [], [], 0, 0, 0);
+	#sol = branchandbound(ukp, sol, 0, solution(zeros(Int64, ukp.n), [], [], 0, 0, 0));
+	sol = solution(zeros(Int64, ukp.n), [], [], 0, 0, 0);
+	sol = branchandbound2(ukp, sol, 0, solution(zeros(Int64, ukp.n), [], [], 0, 0, 0));
+	print("probleme $(i) (",valopt,") : ",sol.z," : ",sol.x," ; ou ",sol.z," : ",sol.x);
+	print("\n");
+end

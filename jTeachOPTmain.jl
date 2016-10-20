@@ -287,8 +287,8 @@ end
 #          heuExplore(s0, zBest)
 #          @printf "\n\nzBest=%s \n" zBest
 
-function heuExplore(s::solution)
-  zBest = s.z;
+function heuExplore(s::solution, zBest)
+  push!(zBest,s.z)
 
   essais = 10 # nombre de voisins construits
   for essai = 1:essais
@@ -301,12 +301,10 @@ function heuExplore(s::solution)
       @printf "z=%d  zVoisin=%d " s.z sVoisin.z
     end
     if sVoisin.z > s.z
-      zBest = sVoisin.z;
+      push!(zBest,sVoisin.z)
       s = deepcopy(sVoisin)
     end
   end
-
-  return s;
 end
 
 # ------------------------------------------------------------
@@ -530,5 +528,4 @@ plotSolutionsSA()
 @printf "\n zS0=%d (%3d)  zMaxSA=%d (%3d)   zGreedy=%d (%3d)  zRelax=%7.2f" s0.z sum(s0.x)  sBest.z sum(sBest.x)  sGreedy.z sum(sGreedy.x)  zRelax
 
 # ============================================================
-
 =#
