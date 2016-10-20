@@ -27,11 +27,12 @@ sol = computeGreedySolutionUKP(ukp);
 #affichage solution gloutone
 print("solution gloutone : \n valeur :");
 print(sol.z);
-print("\n variable a 1 : ");
-for i=1:length(sol.v1)
-	print(sol.v1[i]);
+print("\n objet utilise : ");
+for i=1:ukp.n-1
+	print(sol.x[i]);
 	print(" - ");
 end
+print(sol.x[ukp.n],"\n \n");
 
 #borne duale
 print("\nborne duale : ");
@@ -44,23 +45,26 @@ prec = sol.z - 1;
 while (sol.z > prec)
 	sol = heuExplore(sol);
 	prec = sol.z;
-end	
+end
 
 #affichage solution ameliore
 print("\nsolution ameliore : \n valeur :");
 print(sol.z);
-print("\n variable a 1 : ");
-for i=1:length(sol.v1)
-	print(sol.v1[i]);
+print("\n objet utilise : ");
+for i=1:ukp.n-1
+	print(sol.x[i]);
 	print(" - ");
 end
+print(sol.x[ukp.n],"\n \n");
 
 #solution exacte par branch and bound
 sol = solution(zeros(Int64, ukp.n), [], [], 0, 0, 0);
-sol = branchandbound(ukp, sol, 0, sol);
+sol = branchandbound(ukp, sol, 0, solution(zeros(Int64, ukp.n), [], [], 0, 0, 0));
 print("\nsolution exacte : \n valeur :");
 print(sol.z);
-for i=1:length(sol.v1)
-	print(sol.v1[i]);
+print("\n objet utilise : ");
+for i=1:ukp.n-1
+	print(sol.x[i]);
 	print(" - ");
 end
+print(sol.x[ukp.n],"\n \n");

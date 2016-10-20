@@ -46,7 +46,7 @@ const verbose = false
 # ------------------------------------------------------------
 # Global vectors storing the solutions for graphical purposes
 
-global zBest    = [] # each best values of f(x) collected 
+global zBest    = [] # each best values of f(x) collected
 global zBestAll = [] # best values of f(x) collected for each iteration
 global zAll     = [] # all values of f(x) collected for each iteration
 global tAll     = [] # values of the cooling schedule for each iteration
@@ -62,7 +62,7 @@ type instance
 end
 
 # ------------------------------------------------------------
-# Datastructure of a 01UKP solution 
+# Datastructure of a 01UKP solution
 
 type solution
 
@@ -182,7 +182,7 @@ function generateRandomlyInstanceUKP(n = 100, max_ci = 100, max_wi = 30)
     # --- creation de l'instance
     rnd_c = rand(1:max_ci,n); # c_i \in [1,max_ci]
     rnd_w = rand(1:max_wi,n) # w_i \in [1,max_wi]
-    
+
     # rank the items according the decreasing values u_i = c_i/w_i
     utilite = rnd_c ./ rnd_w
     reord = sortperm(utilite, rev=true)
@@ -194,9 +194,9 @@ function generateRandomlyInstanceUKP(n = 100, max_ci = 100, max_wi = 30)
         @printf "(%d %d %.2f) \n " ukp.c[i] ukp.w[i] utilite[reord[i]]
       end
     end
-            
+
     ukp.W = round(Int64, sum(ukp.w)/2)
-                
+
     return ukp
 end
 
@@ -205,7 +205,7 @@ end
 # Discussed in Chapter 2, course Metaheuristics
 
 function computeGreedySolutionUKP(ukp)
-    
+
     # ---
     # Calcule la solution gloutonne avec pour utilite : u(i) = c(i)/p(i)
     sGreedy = solution(zeros(Int64, ukp.n), [], [], 0, 0, 0)
@@ -224,7 +224,7 @@ function computeGreedySolutionUKP(ukp)
     # ---
     # scinde le vecteur de x binaire en 2 vecteurs d'indices
     splitX(sGreedy)
-                        
+
     return sGreedy
 end
 
@@ -233,7 +233,7 @@ end
 # Discussed in Chapter x, course Integer Programming
 
 function computeLinearRelaxationUKP(ukp)
-    
+
     # identify the last item integrally selected
     sommeW = 0 ; s = 1
     while (s <= ukp.n) && (sommeW + ukp.w[s] <= ukp.W)
@@ -241,7 +241,7 @@ function computeLinearRelaxationUKP(ukp)
       s = s + 1
     end
     s = s - 1
-                
+
     # compute the upper bound
     if (ukp.W - dot(ukp.w[1:s], sGreedy.x[1:s])) > 0
       # contrainte non saturee => ajout de la partie fractionnaire de l'item bloquant
@@ -258,7 +258,7 @@ end
 # Discussed in Chapter 2, course Metaheuristics
 
 function computeRandomSolutionUKP(ukp)
-    
+
     # ---
     # Construit aleatoirement une solution initiale realisable
     s0 = solution(zeros(Int64, ukp.n), [], [], 0, 0, 0)
@@ -281,7 +281,7 @@ function computeRandomSolutionUKP(ukp)
 end
 
 # ------------------------------------------------------------
-# Elementary exploration of a neighborhood of a solution with a random 
+# Elementary exploration of a neighborhood of a solution with a random
 # Discussed in Chapter 2, course Metaheuristics
 # Call :
 #          heuExplore(s0, zBest)
