@@ -71,7 +71,7 @@ print(sol.x[ukp.n],"\n \n");
 
 
 #experimentations numeriques
-for i=1:6
+for i=1:7
 	f = open("./instances/$i/p0$(i)_c.txt");
 	ukp.W = parse(Int, readline(f));
 	ukp.n = parse(Int, readline(f));

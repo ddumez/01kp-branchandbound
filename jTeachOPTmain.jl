@@ -307,6 +307,17 @@ function heuExplore(s::solution, zBest)
   end
 end
 
+function heuExplore(s::solution)
+  essais = 10 # nombre de voisins construits
+  for essai = 1:essais
+    sVoisin = deepcopy(swap(s))
+    if sVoisin.z > s.z
+      s = deepcopy(sVoisin)
+    end
+  end
+  return s;
+end
+
 # ------------------------------------------------------------
 # Simulated Annealing metaheuristic for a function to maximize
 # Discussed in Chapter 4, course Metaheuristics
