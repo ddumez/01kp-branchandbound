@@ -98,7 +98,7 @@ end
 print(sol.x[ukp.n],"\n \n");
 
 
-#experimentations numeriques
+#test si les algorithmes sont corects
 for i=1:8
 	f = open("./instances/$i/p0$(i)_c.txt");
 	ukp.W = parse(Int, readline(f));
@@ -123,9 +123,149 @@ for i=1:8
 	end
 	ukp = trier(ukp);
 	sol = solution(zeros(Int64, ukp.n), [], [], 0, ukp.W, 0);
-	sol = @time branchandbound(ukp, sol, 1, solution(zeros(Int64, ukp.n), [], [], 0, ukp.W, 0));
+	sol = branchandbound(ukp, sol, 1, solution(zeros(Int64, ukp.n), [], [], 0, ukp.W, 0));
 	sol2 = solution(zeros(Int64, ukp.n), [], [], 0, ukp.W, 0);
-	sol2 = @time branchandbound2(ukp, sol2, 1, solution(zeros(Int64, ukp.n), [], [], 0, ukp.W, 0));
-	print("probleme $(i) (",valopt,") : ",sol.z," : ",sol.x," ; ou ",sol2.z," : ",sol2.x);
+	sol2 = branchandbound2(ukp, sol2, 1, solution(zeros(Int64, ukp.n), [], [], 0, ukp.W, 0));
+	print("probleme $(i) ( valopt : ",valopt,") : ",sol.z," : ",sol.x," ; ou ",sol2.z," : ",sol2.x);
 	print("\n");
 end
+print("\n\n")
+
+nbtest = 50 #entre 1 et 100
+tot1 = 0; tot2 = 0;
+
+#test performances instances petit coef
+print("instances a petit coeficients\n")
+#nomfichier = [50,100,200,500,1000,5000,10000] trop dur
+nomfichier = [50,100,200,500]
+coefrange = [1000,10000]
+f2 = open("./resultat/petit.csv","a")
+write(f2,"coefrange , typeinstance , nbvar , avg1 , avg2\n")
+for coef in coefrange
+    for typeinstance = 1:6
+        for nomcourant in nomfichier
+            f = open("./instances/petit/knapPI_$(typeinstance)_$(nomcourant)_$(coef).csv")
+            file = readstring(f)
+            close(f);
+            file = split(file,"\n")
+            passe = 0
+            tot1 = 0; tot2 = 0;
+            for j = 1:nbtest
+                ukp.n = parse(Int,split(file[2+passe]," ")[2])
+                ukp.W = parse(Int,split(file[3+passe]," ")[2])
+                ukp = instance(ukp.n, zeros(ukp.n), zeros(ukp.n), ukp.W)
+                for i=1:ukp.n
+                    line = file[5+i+passe]
+                    line = split(line,",")
+                    ukp.c[i] = parse(Int, line[2])
+                    ukp.w[i] = parse(Int, line[3])
+                end
+                ukp = trier(ukp);
+                sol = solution(zeros(Int64, ukp.n), [], [], 0, ukp.W, 0);
+                tic();
+                sol = branchandbound(ukp, sol, 1, solution(zeros(Int64, ukp.n), [], [], 0, ukp.W, 0));
+                tot1 = tot1 + toq();
+                sol2 = solution(zeros(Int64, ukp.n), [], [], 0, ukp.W, 0);
+                tic()
+                sol2 = branchandbound2(ukp, sol2, 1, solution(zeros(Int64, ukp.n), [], [], 0, ukp.W, 0));
+                tot2 = tot2 + toq();
+                passe = passe + 7 + ukp.n;
+            end
+            tot1 = tot1 / nbtest;
+            tot2 = tot2 / nbtest;
+            print("$(coef) , $(typeinstance) , $(nomcourant) , $(tot1) , $(tot2)\n")
+            write(f2,"$(coef) , $(typeinstance) , $(nomcourant) , $(tot1) , $(tot2)\n")
+        end
+    end
+end
+close(f2)
+
+#test performances instances grand coef
+
+print("instances a grand coeficients\n")
+#nomfichier = [50,100,200,500,1000,5000,10000] trop dur
+nomfichier = [50,100,200,500]
+coefrange = [100000,1000000,10000000]
+f2 = open("./resultat/grand.csv","a")
+write(f2,"coefrange , typeinstance , nbvar , avg1 , avg2\n")
+for coef in coefrange
+    for typeinstance = 1:6
+        for nomcourant in nomfichier
+            f = open("./instances/grand/knapPI_$(typeinstance)_$(nomcourant)_$(coef).csv")
+            file = readstring(f)
+            close(f);
+            file = split(file,"\n")
+            passe = 0
+            tot1 = 0; tot2 = 0;
+            for j = 1:nbtest
+                ukp.n = parse(Int,split(file[2+passe]," ")[2])
+                ukp.W = parse(Int,split(file[3+passe]," ")[2])
+                ukp = instance(ukp.n, zeros(ukp.n), zeros(ukp.n), ukp.W)
+                for i=1:ukp.n
+                    line = file[5+i+passe]
+                    line = split(line,",")
+                    ukp.c[i] = parse(Int, line[2])
+                    ukp.w[i] = parse(Int, line[3])
+                end
+                ukp = trier(ukp);
+                sol = solution(zeros(Int64, ukp.n), [], [], 0, ukp.W, 0);
+                tic();
+                sol = branchandbound(ukp, sol, 1, solution(zeros(Int64, ukp.n), [], [], 0, ukp.W, 0));
+                tot1 = tot1 + toq();
+                sol2 = solution(zeros(Int64, ukp.n), [], [], 0, ukp.W, 0);
+                tic()
+                sol2 = branchandbound2(ukp, sol2, 1, solution(zeros(Int64, ukp.n), [], [], 0, ukp.W, 0));
+                tot2 = tot2 + toq();
+                passe = passe + 7 + ukp.n;
+            end
+            tot1 = tot1 / nbtest;
+            tot2 = tot2 / nbtest;
+            print("$(coef) , $(typeinstance) , $(nomcourant) , $(tot1) , $(tot2)\n")
+            write(f2,"$(coef) , $(typeinstance) , $(nomcourant) , $(tot1) , $(tot2)\n")
+        end
+    end
+end
+close(f2)
+
+#test coef instance complique
+print("instances dur\n")
+#nomfichier = [20,50,100,200,500,1000,5000,10000] trop dur
+nomfichier = [20,50,100]
+f2 = open("./resultat/hard.csv","a")
+write(f2,"typeinstance , nbvar , avg1 , avg2\n")
+for typeinstance = 11:16
+    for nomcourant in nomfichier
+        f = open("./instances/hard/knapPI_$(typeinstance)_$(nomcourant)_1000.csv")
+        file = readstring(f)
+        close(f);
+        file = split(file,"\n")
+        passe = 0
+        tot1 = 0; tot2 = 0;
+        for j = 1:nbtest
+            ukp.n = parse(Int,split(file[2+passe]," ")[2])
+            ukp.W = parse(Int,split(file[3+passe]," ")[2])
+            ukp = instance(ukp.n, zeros(ukp.n), zeros(ukp.n), ukp.W)
+            for i=1:ukp.n
+                line = file[5+i+passe]
+                line = split(line,",")
+                ukp.c[i] = parse(Int, line[2])
+                ukp.w[i] = parse(Int, line[3])
+            end
+            ukp = trier(ukp);
+            sol = solution(zeros(Int64, ukp.n), [], [], 0, ukp.W, 0);
+            tic();
+            sol = branchandbound(ukp, sol, 1, solution(zeros(Int64, ukp.n), [], [], 0, ukp.W, 0));
+            tot1 = tot1 + toq();
+            sol2 = solution(zeros(Int64, ukp.n), [], [], 0, ukp.W, 0);
+            tic()
+            sol2 = branchandbound2(ukp, sol2, 1, solution(zeros(Int64, ukp.n), [], [], 0, ukp.W, 0));
+            tot2 = tot2 + toq();
+            passe = passe + 7 + ukp.n;
+        end
+        tot1 = tot1 / nbtest;
+        tot2 = tot2 / nbtest;
+        print("$(typeinstance) , $(nomcourant) , $(tot1) , $(tot2)\n")
+        write(f2,"$(typeinstance) , $(nomcourant) , $(tot1) , $(tot2)\n")
+    end
+end
+close(f2)
