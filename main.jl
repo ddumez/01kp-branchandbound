@@ -131,15 +131,16 @@ for i=1:8
 end
 print("\n\n")
 
-nbtest = 50 #entre 1 et 100
+nbtest = 5 #entre 1 et 100
 tot1 = 0; tot2 = 0;
 
 #test performances instances petit coef
 print("instances a petit coeficients\n")
 #nomfichier = [50,100,200,500,1000,5000,10000] trop dur
-nomfichier = [50,100,200,500]
+nomfichier = [50,100,200]
 coefrange = [1000,10000]
 f2 = open("./resultat/petit.csv","a")
+print("coefrange , typeinstance , nbvar , avg1 , avg2\n");
 write(f2,"coefrange , typeinstance , nbvar , avg1 , avg2\n")
 for coef in coefrange
     for typeinstance = 1:6
@@ -184,9 +185,10 @@ close(f2)
 
 print("instances a grand coeficients\n")
 #nomfichier = [50,100,200,500,1000,5000,10000] trop dur
-nomfichier = [50,100,200,500]
+nomfichier = [50,100,200]
 coefrange = [100000,1000000,10000000]
 f2 = open("./resultat/grand.csv","a")
+print("coefrange , typeinstance , nbvar , avg1 , avg2\n")
 write(f2,"coefrange , typeinstance , nbvar , avg1 , avg2\n")
 for coef in coefrange
     for typeinstance = 1:6
@@ -232,6 +234,7 @@ print("instances dur\n")
 #nomfichier = [20,50,100,200,500,1000,5000,10000] trop dur
 nomfichier = [20,50,100]
 f2 = open("./resultat/hard.csv","a")
+print("typeinstance , nbvar , avg1 , avg2\n")
 write(f2,"typeinstance , nbvar , avg1 , avg2\n")
 for typeinstance = 11:16
     for nomcourant in nomfichier
