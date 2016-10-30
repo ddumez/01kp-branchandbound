@@ -34,17 +34,17 @@ function completeMetT(ukp, sol, k)
         reste = reste - floor(reste / ukp.w[s])*ukp.w[s]
 
         if(s < ukp.n)
-            u0 = zRelax + floor( reste * (ukp.c[s+1] / ukp.w[s+1]) );
+            u0 = floor( reste * (ukp.c[s+1] / ukp.w[s+1]) );
         else
-            u0 = zRelax
+            u0 = 0
         end
         if(s>1)
-            u1 = zRelax + floor( ukp.c[s] - (ukp.w[s]-reste)*(ukp.c[s-1] / ukp.w[s-1]) );
+            u1 = floor( ukp.c[s] - (ukp.w[s]-reste)*(ukp.c[s-1] / ukp.w[s-1]) );
         else
-            u1 = zRelax
+            u1 = 0
         end
 
-        return max(u0,u1);
+        return zRelax + max(u0,u1);
     else
         return zRelax
     end
